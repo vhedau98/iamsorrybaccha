@@ -24,6 +24,13 @@
       text-align: center;
       box-shadow: 0 18px 35px rgba(0,0,0,0.15);
       animation: cardIn 1s ease;
+      transition: 0.4s ease;
+    }
+
+    .card.dim {
+      opacity: 0.25;
+      filter: blur(2px);
+      pointer-events: none;
     }
 
     @keyframes cardIn {
@@ -94,17 +101,16 @@
     /* POPUP */
     .popup {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.35);
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
       display: flex;
       justify-content: center;
       align-items: center;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.5s ease;
+      z-index: 10;
     }
 
     .popup.visible {
@@ -114,24 +120,25 @@
 
     .popup-content {
       background: white;
-      padding: 30px 40px;
-      border-radius: 25px;
+      padding: 36px 40px;
+      border-radius: 28px;
       text-align: center;
-      animation: popUp 0.6s ease;
+      width: 240px;
+      animation: popUp 0.6s ease forwards;
     }
 
     @keyframes popUp {
-      from { transform: scale(0.8); opacity: 0; }
+      from { transform: scale(0.85); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
     .popup-heart {
-      font-size: 36px;
+      font-size: 42px;
       animation: beat 1.2s infinite;
     }
 
     .popup-content p {
-      margin-top: 10px;
+      margin-top: 12px;
       font-size: 16px;
       color: #444;
     }
@@ -176,25 +183,27 @@
     const photo = document.getElementById("photo");
     const text = document.getElementById("text");
     const button = document.getElementById("btn");
+    const card = document.querySelector(".card");
 
     function nextStep() {
       step++;
 
-      // END
+      // END STATE
       if (step === messages.length) {
         button.style.display = "none";
+        card.classList.add("dim");
         document.getElementById("popup").classList.add("visible");
         return;
       }
 
-      // text transition
+      // text animation
       text.classList.remove("show");
       setTimeout(() => {
         text.innerHTML = messages[step];
         text.classList.add("show");
       }, 300);
 
-      // switch photo on step 2
+      // photo switch
       if (step === 2) {
         photo.classList.add("fade");
         setTimeout(() => {
